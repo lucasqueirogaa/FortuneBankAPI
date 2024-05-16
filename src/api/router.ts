@@ -3,9 +3,8 @@ import { Logger } from "../config/logger";
 
 const router = Router();
 
-// Check status router
 router.get("/", (req: Request, res: Response) => {
-  Logger.info("Retorno da rota no server corretamente");
+  Logger.info("Rota chamada com sucesso!");
 
   return res.json("Tudo funcionando perfeitamente");
 });

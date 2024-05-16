@@ -1,0 +1,14 @@
+version: "1.0"
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    working_dir: /src/index.ts
+    container_name: fortunebank-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env
