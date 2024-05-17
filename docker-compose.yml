@@ -1,18 +1,29 @@
 version: "1.0"
 
 services:
+  mongo_db:
+    container_name: mongo_container
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+
   app:
     build:
       context: ./
       dockerfile: Dockerfile
-      args:
-        - PORT=${PORT}
     working_dir: /src
     container_name: fortunebank-api
     restart: always
     ports:
       - ${PORT}:${PORT}
-    env_file:
-      - ./.env
+    environment:
+      PORT: ${PORT}
+      DB_URI: ${DB_URI_DOCKER}
+    depends_on:
+      - mongo_db
     volumes:
       - .:/src
+
+volumes:
+  mongo_db: {}
