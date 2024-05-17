@@ -5,10 +5,14 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    working_dir: /src/index.ts
+      args:
+        - PORT=${PORT}
+    working_dir: /src
     container_name: fortunebank-api
-    restart: unless-stopped
+    restart: always
     ports:
-      - "3000:3000"
+      - ${PORT}:${PORT}
     env_file:
       - ./.env
+    volumes:
+      - .:/src

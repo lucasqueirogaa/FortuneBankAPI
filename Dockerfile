@@ -1,12 +1,16 @@
 FROM node:20.9.0
 
-WORKDIR /src/index.ts
+ARG PORT
+
+ENV PORT ${PORT}
+
+WORKDIR /src
 
 COPY ./package.json .
 RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 CMD npm run dev
