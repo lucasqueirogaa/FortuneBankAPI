@@ -1,10 +1,12 @@
-version: "1.0"
+version: "3.5"
 
 services:
   mongo_db:
     container_name: mongo_container
     image: mongo:latest
     restart: always
+    ports:
+      - 28017:27017
     volumes:
       - mongo_db:/data/db
 
@@ -13,7 +15,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     working_dir: /src
-    container_name: fortunebank-api
+    container_name: fortunebank-api2
     restart: always
     ports:
       - ${PORT}:${PORT}
