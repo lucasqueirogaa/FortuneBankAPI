@@ -15,7 +15,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     working_dir: /src
-    container_name: fortunebank-api2
+    container_name: fortunebank-api
     restart: always
     ports:
       - ${PORT}:${PORT}
