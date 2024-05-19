@@ -13,10 +13,17 @@ server.get("/", async (req: FastifyRequest, res: FastifyReply) => {
   return res.code(200).send("API working");
 });
 
+// User endpoints
 server.post(
   "/user",
   (req: FastifyRequest<{ Body: IUser }>, res: FastifyReply) => {
     userController.createUser(req, res);
+  }
+);
+server.delete(
+  "/user/:id",
+  (req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply) => {
+    userController.deleteUser(req, res)
   }
 );
 
