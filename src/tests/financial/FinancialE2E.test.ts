@@ -6,6 +6,7 @@ import { server as app } from "../../api/routes";
 import { connectDB, disconnectDB } from "../../config/db";
 
 import UserModel from "../../models/userModel";
+import { Logger } from "../../config/logger";
 
 describe("Make a deposit Test E2E", () => {
   beforeAll(async () => {
@@ -160,5 +161,58 @@ describe("Make a deposit Test E2E", () => {
         amount: 1,
       })
       .expect(400);
+  });
+});
+
+describe("Make a withdraw Test E2E", () => {
+  beforeAll(async () => {
+    await connectDB("mongodb://localhost:27017/withdrawdatabase");
+  });
+
+  afterAll(async () => {
+    await disconnectDB();
+  });
+
+  test("Send a withdraw amount that exceeds the balance, do not withdraw", async () => {
+    await app.ready();
+
+    await request(app.server)
+      .post("/user")
+      .send({
+        name: "Lucas Queiroga Make Withdraw",
+        cpf: "00000000012",
+        age: 18,
+        email: "lucaswithdraw@gmail.com",
+        password: "123456789",
+      })
+      .expect(201);
+
+    const user = await UserModel.findOne({
+      email: "lucaswithdraw@gmail.com",
+      cpf: "00000000012",
+    });
+
+    await request(app.server)
+      .put("/deposit")
+      .send({
+        accountNumber: user?.accountNumber,
+        name: "Lucas Queiroga Make Withdraw",
+        cpf: "00000000012",
+        amount: 60,
+      })
+      .expect(201);
+
+    await request(app.server)
+      .put("/withdraw")
+      .send({
+        accountNumber: user?.accountNumber,
+        name: "Lucas Queiroga Make Withdraw",
+        cpf: "00000000012",
+        withdrawValue: 100,
+        password: "123456789",
+      })
+      .expect(400);
+
+    // Problem to make the withdraw. The deposit is not updating the amount, so we can't make the withdraw
   });
 });

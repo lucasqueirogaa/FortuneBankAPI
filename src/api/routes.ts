@@ -3,7 +3,7 @@ import fastify, { FastifyReply, FastifyRequest } from "fastify";
 import { Logger } from "../config/logger";
 
 import { IUser } from "../types/User";
-import { IDepositBody } from "../types/Financial";
+import { IDepositBody, IWithdrawBody } from "../types/Financial";
 
 import userController from "../controllers/UserController";
 import financialController from "../controllers/FinancialController";
@@ -36,6 +36,12 @@ server.put(
   "/deposit",
   (req: FastifyRequest<{ Body: IDepositBody }>, res: FastifyReply) => {
     financialController.deposit(req, res);
+  }
+);
+server.put(
+  "/withdraw",
+  (req: FastifyRequest<{ Body: IWithdrawBody }>, res: FastifyReply) => {
+    financialController.withdraw(req, res);
   }
 );
 

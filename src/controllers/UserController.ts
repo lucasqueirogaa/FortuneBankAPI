@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import bcrypt from "bcrypt";
 
 import { IUser } from "../types/User";
 
@@ -80,6 +81,16 @@ const userController = {
       return;
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const cryptyPassword = await bcrypt.hash(password, salt);
+
+    if (!cryptyPassword) {
+      res
+        .status(500)
+        .send({ message: "Problem with password crypt, try again later" });
+      return;
+    }
+
     const accountNumber = await createAccountNumber();
 
     try {
@@ -88,7 +99,7 @@ const userController = {
         age,
         cpf,
         email,
-        password,
+        password: cryptyPassword,
         accountNumber,
         amount: 0,
         pixKeys: [],
