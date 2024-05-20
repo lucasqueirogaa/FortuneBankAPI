@@ -16,7 +16,7 @@ describe("Create User Test E2E", () => {
     await disconnectDB();
   });
 
-  test("User should be created", async () => {
+  test("Create a user", async () => {
     await app.ready();
 
     await request(app.server)
@@ -31,7 +31,7 @@ describe("Create User Test E2E", () => {
       .expect(201);
   });
 
-  test("User should't be create with same CPF", async () => {
+  test("Send same CPF, do not create", async () => {
     await app.ready();
 
     await request(app.server)
@@ -57,7 +57,7 @@ describe("Create User Test E2E", () => {
       .expect(400);
   });
 
-  test("User should't be create with same email", async () => {
+  test("Send same email, do not create", async () => {
     await app.ready();
 
     await request(app.server)
@@ -83,7 +83,7 @@ describe("Create User Test E2E", () => {
       .expect(400);
   });
 
-  test("User should't be create with age under 18", async () => {
+  test("Send user under 18 years, do not create", async () => {
     await app.ready();
 
     await request(app.server)
@@ -98,7 +98,7 @@ describe("Create User Test E2E", () => {
       .expect(400);
   });
 
-  test("User should't be create with missing informations", async () => {
+  test("Send missing informations, do not create", async () => {
     await app.ready();
 
     await request(app.server)
