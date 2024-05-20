@@ -173,7 +173,7 @@ describe("Make a withdraw Test E2E", () => {
     await disconnectDB();
   });
 
-  test("Send a withdraw amount that exceeds the balance, do not withdraw", async () => {
+  test("Send a withdraw that exceeds the current amount, do not withdraw", async () => {
     await app.ready();
 
     await request(app.server)
@@ -214,5 +214,90 @@ describe("Make a withdraw Test E2E", () => {
       .expect(400);
 
     // Problem to make the withdraw. The deposit is not updating the amount, so we can't make the withdraw
+  });
+  test("Send missing informations, do not withdraw", async () => {
+    await app.ready();
+
+    await request(app.server)
+      .post("/user")
+      .send({
+        name: "Lucas Queiroga Missing informations",
+        cpf: "00000000013",
+        age: 18,
+        email: "lucasmissinginformations@gmail.com",
+        password: "123456789",
+      })
+      .expect(201);
+
+    const user = await UserModel.findOne({
+      email: "lucasmissinginformations@gmail.com",
+      cpf: "00000000013",
+    });
+
+    await request(app.server)
+      .put("/withdraw")
+      .send({
+        accountNumber: user?.accountNumber,
+        name: "",
+        cpf: "00000000013",
+        withdrawValue: 100,
+        password: "123456789",
+      })
+      .expect(400);
+  });
+  test("Send negative withdraw, do not withdraw", async () => {
+    await app.ready();
+
+    await request(app.server)
+      .post("/user")
+      .send({
+        name: "Lucas Queiroga Negative Withdraw",
+        cpf: "00000000014",
+        age: 18,
+        email: "lucasnegatvewithdraw@gmail.com",
+        password: "123456789",
+      })
+      .expect(201);
+
+    const user = await UserModel.findOne({
+      email: "lucasnegatvewithdraw@gmail.com",
+      cpf: "00000000014",
+    });
+
+    await request(app.server)
+      .put("/withdraw")
+      .send({
+        accountNumber: user?.accountNumber,
+        name: "Lucas Queiroga Negative Withdraw",
+        cpf: "00000000014",
+        withdrawValue: -100,
+        password: "123456789",
+      })
+      .expect(400);
+  });
+  test("Send acc number like string, do not withdraw", async () => {
+    await app.ready();
+
+    await request(app.server)
+      .post("/user")
+      .send({
+        name: "Lucas Queiroga Acc String",
+        cpf: "00000000015",
+        age: 18,
+        email: "lucasaccstring@gmail.com",
+        password: "123456789",
+      })
+      .expect(201);
+
+    await request(app.server)
+      .put("/withdraw")
+      .send({
+        accountNumber: `12345`,
+        name: "Lucas Queiroga Acc String",
+        cpf: "00000000015",
+        withdrawValue: 100,
+        password: "123456789",
+      })
+      .expect(400);
   });
 });
