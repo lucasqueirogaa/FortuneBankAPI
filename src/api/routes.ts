@@ -1,8 +1,12 @@
 import fastify, { FastifyReply, FastifyRequest } from "fastify";
 
 import { Logger } from "../config/logger";
-import userController from "../controllers/UserController";
+
 import { IUser } from "../types/User";
+import { IDepositBody } from "../types/Financial";
+
+import userController from "../controllers/UserController";
+import financialController from "../controllers/FinancialController";
 
 const server = fastify({});
 
@@ -23,7 +27,15 @@ server.post(
 server.delete(
   "/user/:id",
   (req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply) => {
-    userController.deleteUser(req, res)
+    userController.deleteUser(req, res);
+  }
+);
+
+// User financial endpoints
+server.put(
+  "/deposit",
+  (req: FastifyRequest<{ Body: IDepositBody }>, res: FastifyReply) => {
+    financialController.deposit(req, res);
   }
 );
 
