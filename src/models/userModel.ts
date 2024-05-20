@@ -14,10 +14,12 @@ const schema = new Schema<IUser>(
     cpf: {
       type: String,
       required: true,
+      unique: true,
     },
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -26,6 +28,7 @@ const schema = new Schema<IUser>(
     accountNumber: {
       type: Number,
       required: true,
+      unique: true,
     },
     amount: {
       type: Number,
