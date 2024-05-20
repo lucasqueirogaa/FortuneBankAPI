@@ -1,7 +1,10 @@
 import { test, describe, beforeAll, afterAll } from "vitest";
 import request from "supertest";
+
 import { server as app } from "../../api/routes";
+
 import { connectDB, disconnectDB } from "../../config/db";
+
 import UserModel from "../../models/userModel";
 
 describe("Create User Test E2E", () => {
