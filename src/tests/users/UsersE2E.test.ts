@@ -22,11 +22,11 @@ describe("Create User Test E2E", () => {
     await request(app.server)
       .post("/user")
       .send({
-        name: "Lucas Queiroga",
-        cpf: "12345678910",
+        name: "Lucas Queiroga Base Test",
+        cpf: "00000000001",
         age: 18,
-        email: "lucas@gmail.com",
-        password: "13452131212",
+        email: "lucasbasetest@gmail.com",
+        password: "123456789",
       })
       .expect(201);
   });
@@ -37,11 +37,22 @@ describe("Create User Test E2E", () => {
     await request(app.server)
       .post("/user")
       .send({
-        name: "Lucas Queiroga",
-        cpf: "12345678910",
+        name: "Lucas Queiroga CPF Test 1",
+        cpf: "00000000002",
         age: 18,
-        email: "lucas1@gmail.com",
-        password: "13452131212",
+        email: "lucascpftest1@gmail.com",
+        password: "123456789",
+      })
+      .expect(201);
+
+    await request(app.server)
+      .post("/user")
+      .send({
+        name: "Lucas Queiroga CPF Test 2",
+        cpf: "00000000002",
+        age: 18,
+        email: "lucascpftest2@gmail.com",
+        password: "123456789",
       })
       .expect(400);
   });
@@ -52,11 +63,22 @@ describe("Create User Test E2E", () => {
     await request(app.server)
       .post("/user")
       .send({
-        name: "Lucas Queiroga",
-        cpf: "12345678911",
+        name: "Lucas Queiroga Email Test 1",
+        cpf: "00000000004",
         age: 18,
-        email: "lucas@gmail.com",
-        password: "13452131212",
+        email: "lucasemailtest@gmail.com",
+        password: "123456789",
+      })
+      .expect(201);
+
+    await request(app.server)
+      .post("/user")
+      .send({
+        name: "Lucas Queiroga Email Test 2",
+        cpf: "10398547216",
+        age: 18,
+        email: "lucasemailtest@gmail.com",
+        password: "123456789",
       })
       .expect(400);
   });
@@ -68,10 +90,10 @@ describe("Create User Test E2E", () => {
       .post("/user")
       .send({
         name: "Lucas Queiroga",
-        cpf: "12345678914",
+        cpf: "00000000005",
         age: 17,
-        email: "lucas2@gmail.com",
-        password: "13452131212",
+        email: "lucasageunder18@gmail.com",
+        password: "123456789",
       })
       .expect(400);
   });
@@ -83,10 +105,10 @@ describe("Create User Test E2E", () => {
       .post("/user")
       .send({
         name: "",
-        cpf: "12345678914",
-        age: 17,
-        email: "lucas2@gmail.com",
-        password: "13452131212",
+        cpf: "00000000006",
+        age: 18,
+        email: "lucasmissinginfos@gmail.com",
+        password: "123456789",
       })
       .expect(400);
   });
@@ -101,21 +123,21 @@ describe("Delete User Test E2E", () => {
     await disconnectDB();
   });
 
-  test("User deleted", async () => {
+  test("User should be deleted", async () => {
     await app.ready();
 
     await request(app.server)
       .post("/user")
       .send({
-        name: "Lucas Queiroga",
-        cpf: "12345678910",
+        name: "Lucas Queiroga Delete",
+        cpf: "00000000006",
         age: 18,
-        email: "lucas@gmail.com",
-        password: "13452131212",
+        email: "lucasdelete@gmail.com",
+        password: "123456789",
       })
       .expect(201);
 
-    const user = await UserModel.findOne({ email: "lucas@gmail.com" });
+    const user = await UserModel.findOne({ email: "lucasdelete@gmail.com" });
 
     await request(app.server).delete(`/user/${user?._id}`).expect(201);
   });
@@ -123,10 +145,10 @@ describe("Delete User Test E2E", () => {
   test("User don't exists, don't delete", async () => {
     await app.ready();
 
-    await request(app.server).delete(`/user/66480e74be658dd4758f2f28`).expect(400);
+    await request(app.server).delete(`/user/00480e74be658dd4758f2f28`).expect(400);
   });
 
-  test("Id don't send, can't delete", async () => {
+  test("ID not sent, do not delete", async () => {
     await app.ready();
 
     await request(app.server).delete(`/user/`).expect(400);
