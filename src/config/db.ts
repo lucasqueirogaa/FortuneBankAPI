@@ -17,7 +17,6 @@ const disconnectDB = async () => {
     Logger.info("MongoDB disconnected and droped");
   } catch (e: any) {
     Logger.error(`Error with db disconnect: ${e.message}`);
-    process.exit(1);
   }
 };
 
