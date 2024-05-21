@@ -12,3 +12,9 @@ export interface IWithdrawBody {
   withdrawValue: number;
   password: string;
 }
+
+export interface IAccountStatementStatement {
+  type: string;
+  value: number;
+  date: string;
+}

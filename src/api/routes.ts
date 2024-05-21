@@ -44,5 +44,11 @@ server.put(
     financialController.withdraw(req, res);
   }
 );
+server.get(
+  "/accountstatment/:id",
+  (req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply) => {
+    financialController.allAccountStatement(req, res);
+  }
+);
 
 export { server };

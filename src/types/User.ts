@@ -1,3 +1,5 @@
+import { IAccountStatementStatement } from "./Financial";
+
 export interface IUser {
   name: string;
   email: string;
@@ -7,4 +9,5 @@ export interface IUser {
   accountNumber: number;
   amount: number;
   pixKeys: [string];
+  accountStatement: [IAccountStatementStatement]
 }

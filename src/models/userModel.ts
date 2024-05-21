@@ -1,6 +1,21 @@
 import { Schema, model } from "mongoose";
 import { IUser } from "../types/User";
 
+const accountStatementSchema = new Schema({
+  type: {
+    type: String,
+    required: true,
+  },
+  value: {
+    type: Number,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
+});
+
 const schema = new Schema<IUser>(
   {
     name: {
@@ -36,6 +51,10 @@ const schema = new Schema<IUser>(
     },
     pixKeys: {
       type: [String],
+      required: true,
+    },
+    accountStatement: {
+      type: [accountStatementSchema],
       required: true,
     },
   },

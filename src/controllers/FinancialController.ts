@@ -117,6 +117,34 @@ const financialController = {
       res.status(500).send({ message: `Unknow error: ${e.message}` });
     }
   },
+  allAccountStatement: async (
+    req: FastifyRequest<{ Params: { id: string } }>,
+    res: FastifyReply
+  ) => {
+    const { id } = req.params;
+
+    if (!id) {
+      res.status(400).send({ message: "Id on params are missing" });
+      return;
+    }
+
+    const user = await UserModel.findById(id).exec();
+
+    if (!user) {
+      res.status(400).send({ message: "This account don't exists" });
+      return;
+    }
+    if (user.accountStatement.length <= 0) {
+      res.status(200).send({ message: "The user don't make transitions yet" });
+      return;
+    }
+
+    Logger.info("Account Statment return with success");
+    res.status(200).send({
+      message: "Account Statment return with success",
+      accountStatement: user.accountStatement,
+    });
+  },
 };
 
 export default financialController;
