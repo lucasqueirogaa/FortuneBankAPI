@@ -31,10 +31,3 @@ You can run this project with only Docker installed on your machine. You can vie
 
 You can see the API documentation here: 
 
-
-## Additional Documentation and Acknowledgments
-
-* Project folder on server:
-* Confluence link:
-* Asana board:
-* etc...
