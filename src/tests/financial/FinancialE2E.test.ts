@@ -6,7 +6,6 @@ import { server as app } from "../../api/routes";
 import { connectDB, disconnectDB } from "../../config/db";
 
 import UserModel from "../../models/userModel";
-import { Logger } from "../../config/logger";
 
 describe("Make a deposit Test E2E", () => {
   beforeAll(async () => {
@@ -167,14 +166,6 @@ describe("Make a deposit Test E2E", () => {
 describe("Make a withdraw Test E2E", () => {
   beforeAll(async () => {
     await connectDB("mongodb://localhost:27017/withdrawdatabase");
-  });
-
-  afterAll(async () => {
-    await disconnectDB();
-  });
-
-  test("Send a withdraw that exceeds the current amount, do not withdraw", async () => {
-    await app.ready();
 
     await request(app.server)
       .post("/user")
@@ -201,6 +192,19 @@ describe("Make a withdraw Test E2E", () => {
         amount: 60,
       })
       .expect(201);
+  });
+
+  afterAll(async () => {
+    await disconnectDB();
+  });
+
+  test("Send a withdraw that exceeds the current amount, do not withdraw", async () => {
+    await app.ready();
+
+    const user = await UserModel.findOne({
+      email: "lucaswithdraw@gmail.com",
+      cpf: "00000000012",
+    });
 
     await request(app.server)
       .put("/withdraw")
@@ -212,8 +216,6 @@ describe("Make a withdraw Test E2E", () => {
         password: "123456789",
       })
       .expect(400);
-
-    // Problem to make the withdraw. The deposit is not updating the amount, so we can't make the withdraw
   });
   test("Send missing informations, do not withdraw", async () => {
     await app.ready();
@@ -299,5 +301,22 @@ describe("Make a withdraw Test E2E", () => {
         password: "123456789",
       })
       .expect(400);
+  });
+  test("Make a withdraw", async () => {
+    const user = await UserModel.findOne({
+      email: "lucaswithdraw@gmail.com",
+      cpf: "00000000012",
+    });
+
+    await request(app.server)
+      .put("/withdraw")
+      .send({
+        accountNumber: user?.accountNumber,
+        name: "Lucas Queiroga Make Withdraw",
+        cpf: "00000000012",
+        withdrawValue: 20,
+        password: "123456789",
+      })
+      .expect(201);
   });
 });
