@@ -30,4 +30,5 @@ You can run this project with only Docker installed on your machine. You can vie
 ## Usage
 
 You can see the API documentation here: 
+Postman File: https://elements.getpostman.com/redirect?entityId=31132976-022f37eb-1347-4c9b-8ecd-319b98ad1ce4&entityType=collection
 
