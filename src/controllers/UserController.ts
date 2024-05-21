@@ -123,7 +123,7 @@ const userController = {
       return;
     }
 
-    const user = await UserModel.findOne({ _id: id }).exec();
+    const user = await UserModel.findById(id).exec();
 
     if (!user) {
       res.status(400).send({ message: "This user does not exist" });
@@ -142,6 +142,87 @@ const userController = {
 
       Logger.info(`User ${user.name} deleted`);
       res.status(201).send({ message: "User deleted" });
+    } catch (e: any) {
+      Logger.error(e.message);
+      res.status(500).send({ message: `Unknow error: ${e.message}` });
+    }
+  },
+  updateUser: async (
+    req: FastifyRequest<{ Body: IUser; Params: { id: string } }>,
+    res: FastifyReply
+  ) => {
+    const { id } = req.params;
+    const { name, age, cpf, email, password } = req.body;
+
+    if (!id) {
+      res.status(400).send({ message: "A valid ID is required on URL" });
+      return;
+    }
+    if (!name || !age || !cpf || !email || !password) {
+      res
+        .status(400)
+        .send({ message: "One or more required fields are missing" });
+      return;
+    }
+    if (typeof age != "number") {
+      res.status(400).send({ message: "Age need be a number" });
+      return;
+    }
+    if (typeof age != "number") {
+      res.status(400).send({ message: "Age need be a number" });
+      return;
+    }
+
+    const user = await UserModel.findById(id).exec();
+
+    if (!user) {
+      res.status(400).send({ message: "This user does not exist" });
+      return;
+    }
+
+    if (user.cpf != cpf) {
+      const userExists = await UserModel.findOne({ cpf }).exec();
+
+      if (userExists) {
+        res
+          .status(400)
+          .send({ message: "This CPF is alredy associated with another user" });
+        return;
+      }
+    }
+    if (user.email != email) {
+      const userExists = await UserModel.findOne({ email }).exec();
+
+      if (userExists) {
+        res.status(400).send({
+          message: "This email is alredy associated with another user",
+        });
+        return;
+      }
+    }
+
+    const passwordCompare = await bcrypt.compare(password, user.password);
+
+    if (!passwordCompare) {
+      res.status(400).send({
+        message: "Password incorrect",
+      });
+      return;
+    }
+
+    try {
+      user
+        .updateOne({
+          name,
+          email,
+          age,
+          cpf,
+          password,
+        })
+        .exec();
+
+      res.status(200).send({ message: "Client updated!" });
+      Logger.info(`Client ${name} updated`);
     } catch (e: any) {
       Logger.error(e.message);
       res.status(500).send({ message: `Unknow error: ${e.message}` });

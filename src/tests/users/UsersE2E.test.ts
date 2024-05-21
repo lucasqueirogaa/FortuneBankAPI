@@ -145,12 +145,119 @@ describe("Delete User Test E2E", () => {
   test("User don't exists, don't delete", async () => {
     await app.ready();
 
-    await request(app.server).delete(`/user/00480e74be658dd4758f2f28`).expect(400);
+    await request(app.server)
+      .delete(`/user/00480e74be658dd4758f2f28`)
+      .expect(400);
   });
 
   test("ID not sent, do not delete", async () => {
     await app.ready();
 
     await request(app.server).delete(`/user/`).expect(400);
+  });
+});
+
+describe("Update User Test E2E", () => {
+  beforeAll(async () => {
+    await connectDB("mongodb://localhost:27017/updateuserdatabase");
+
+    await request(app.server)
+      .post("/user")
+      .send({
+        name: "Lucas Queiroga Update User",
+        cpf: "00000000014",
+        age: 18,
+        email: "lucasupdateuser@gmail.com",
+        password: "123456789",
+      })
+      .expect(201);
+
+    await request(app.server)
+      .post("/user")
+      .send({
+        name: "Lucas Queiroga Update User 2",
+        cpf: "00000000015",
+        age: 18,
+        email: "lucasupdateuser2@gmail.com",
+        password: "123456789",
+      })
+      .expect(201);
+  });
+
+  afterAll(async () => {
+    await disconnectDB();
+  });
+
+  test("Update User", async () => {
+    await app.ready();
+
+    const user = await UserModel.findOne({
+      cpf: "00000000014",
+    });
+
+    await request(app.server)
+      .put(`/user/${user?.id}`)
+      .send({
+        name: "Lucas Queiroga atualizado",
+        age: user?.age,
+        email: user?.email,
+        password: "123456789",
+        cpf: user?.cpf,
+      })
+      .expect(200);
+  });
+  test("Send missing informations, do not update User", async () => {
+    await app.ready();
+
+    const user = await UserModel.findOne({
+      cpf: "00000000014",
+    });
+
+    await request(app.server)
+      .put(`/user/${user?.id}`)
+      .send({
+        name: "",
+        age: user?.age,
+        email: user?.email,
+        password: "123456789",
+        cpf: user?.cpf,
+      })
+      .expect(400);
+  });
+  test("Send a existing cpf, do not update User", async () => {
+    await app.ready();
+
+    const user = await UserModel.findOne({
+      cpf: "00000000014",
+    });
+
+    await request(app.server)
+      .put(`/user/${user?.id}`)
+      .send({
+        name: "Lucas Queiroga 2",
+        age: user?.age,
+        email: user?.email,
+        password: "123456789",
+        cpf: "00000000015",
+      })
+      .expect(400);
+  });
+  test("Send wrong password, do not update User", async () => {
+    await app.ready();
+
+    const user = await UserModel.findOne({
+      cpf: "00000000014",
+    });
+
+    await request(app.server)
+      .put(`/user/${user?.id}`)
+      .send({
+        name: "Lucas Queiroga 2",
+        age: user?.age,
+        email: user?.email,
+        password: "123456780",
+        cpf: user?.cpf,
+      })
+      .expect(400);
   });
 });

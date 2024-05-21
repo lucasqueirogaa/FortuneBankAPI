@@ -30,6 +30,12 @@ server.delete(
     userController.deleteUser(req, res);
   }
 );
+server.put(
+  "/user/:id",
+  (req: FastifyRequest<{ Body: IUser; Params: { id: string } }>, res: FastifyReply) => {
+    userController.updateUser(req, res);
+  }
+);
 
 // User financial endpoints
 server.put(
