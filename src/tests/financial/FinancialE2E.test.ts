@@ -221,25 +221,9 @@ describe("Make a withdraw Test E2E", () => {
     await app.ready();
 
     await request(app.server)
-      .post("/user")
-      .send({
-        name: "Lucas Queiroga Missing informations",
-        cpf: "00000000013",
-        age: 18,
-        email: "lucasmissinginformations@gmail.com",
-        password: "123456789",
-      })
-      .expect(201);
-
-    const user = await UserModel.findOne({
-      email: "lucasmissinginformations@gmail.com",
-      cpf: "00000000013",
-    });
-
-    await request(app.server)
       .put("/withdraw")
       .send({
-        accountNumber: user?.accountNumber,
+        accountNumber: 12345,
         name: "",
         cpf: "00000000013",
         withdrawValue: 100,
@@ -318,5 +302,64 @@ describe("Make a withdraw Test E2E", () => {
         password: "123456789",
       })
       .expect(201);
+  });
+});
+
+describe("Get Account Statment Test E2E", () => {
+  beforeAll(async () => {
+    await connectDB("mongodb://localhost:27017/withdrawdatabase");
+
+    await request(app.server)
+      .post("/user")
+      .send({
+        name: "Lucas Queiroga Account Statment",
+        cpf: "00000000013",
+        age: 18,
+        email: "lucasaccountstatment@gmail.com",
+        password: "123456789",
+      })
+      .expect(201);
+
+    const user = await UserModel.findOne({
+      email: "lucasaccountstatment@gmail.com",
+      cpf: "00000000013",
+    });
+
+    await request(app.server)
+      .put("/deposit")
+      .send({
+        accountNumber: user?.accountNumber,
+        name: "Lucas Queiroga Account Statment",
+        cpf: "00000000013",
+        amount: 60,
+      })
+      .expect(201);
+  });
+
+  afterAll(async () => {
+    await disconnectDB();
+  });
+
+  test("Send missing informations, don't get Account Statment", async () => {
+    await app.ready();
+
+    await request(app.server).get("/accountstatment/").expect(400);
+  });
+  test("Send wrong ID, don't get Account Statment", async () => {
+    await app.ready();
+
+    await request(app.server)
+      .get("/accountstatment/664b947ae193fe600cdf5253")
+      .expect(400);
+  });
+  test("Get Account Statment", async () => {
+    await app.ready();
+
+    const user = await UserModel.findOne({
+      email: "lucasaccountstatment@gmail.com",
+      cpf: "00000000013",
+    });
+
+    await request(app.server).get(`/accountstatment/${user?.id}`).expect(200);
   });
 });
