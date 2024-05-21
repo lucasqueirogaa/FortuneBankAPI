@@ -46,6 +46,16 @@ const financialController = {
       user
         .updateOne({
           amount: amount + user.amount,
+          $push: {
+            accountStatement: {
+              $each: [{
+                type: "deposit",
+                value: amount,
+                date: new Date()
+              }],
+              $position: 0
+            }
+          }
         })
         .exec();
 
@@ -107,6 +117,16 @@ const financialController = {
       user
         .updateOne({
           amount: user.amount - withdrawValue,
+          $push: {
+            accountStatement: {
+              $each: [{
+                type: "deposit",
+                value: -withdrawValue,
+                date: new Date()
+              }],
+              $position: 0
+            }
+          }
         })
         .exec();
 
