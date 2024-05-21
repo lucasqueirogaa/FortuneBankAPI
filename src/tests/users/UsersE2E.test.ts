@@ -9,7 +9,7 @@ import UserModel from "../../models/userModel";
 
 describe("Create User Test E2E", () => {
   beforeAll(async () => {
-    await connectDB("mongodb://localhost:27017/jestdatabase");
+    await connectDB("mongodb://localhost:27017/createuserdatabase");
   });
 
   afterAll(async () => {
@@ -116,7 +116,7 @@ describe("Create User Test E2E", () => {
 
 describe("Delete User Test E2E", () => {
   beforeAll(async () => {
-    await connectDB("mongodb://localhost:27017/jestdatabase");
+    await connectDB("mongodb://localhost:27017/deleteuserdatabase");
   });
 
   afterAll(async () => {

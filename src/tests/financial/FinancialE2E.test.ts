@@ -9,7 +9,7 @@ import UserModel from "../../models/userModel";
 
 describe("Make a deposit Test E2E", () => {
   beforeAll(async () => {
-    await connectDB("mongodb://localhost:27017/jestdatabase");
+    await connectDB("mongodb://localhost:27017/depositdatabase");
   });
 
   afterAll(async () => {
@@ -307,7 +307,7 @@ describe("Make a withdraw Test E2E", () => {
 
 describe("Get Account Statment Test E2E", () => {
   beforeAll(async () => {
-    await connectDB("mongodb://localhost:27017/withdrawdatabase");
+    await connectDB("mongodb://localhost:27017/accountstatmentdatabase");
 
     await request(app.server)
       .post("/user")
