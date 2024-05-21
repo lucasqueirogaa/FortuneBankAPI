@@ -8,6 +8,5 @@ export interface IUser {
   cpf: string;
   accountNumber: number;
   amount: number;
-  pixKeys: [string];
   accountStatement: [IAccountStatementStatement]
 }

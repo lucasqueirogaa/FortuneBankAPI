@@ -49,10 +49,6 @@ const schema = new Schema<IUser>(
       type: Number,
       required: true,
     },
-    pixKeys: {
-      type: [String],
-      required: true,
-    },
     accountStatement: {
       type: [accountStatementSchema],
       required: true,

@@ -102,7 +102,6 @@ const userController = {
         password: cryptyPassword,
         accountNumber,
         amount: 0,
-        pixKeys: [],
       });
 
       res.status(201).send({ message: "Client created!" });
